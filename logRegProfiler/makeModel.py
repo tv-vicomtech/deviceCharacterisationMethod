@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.externals import joblib
 from sklearn.metrics import accuracy_score
 import pandas
-import csv
+import os
 from pathlib import Path
 
 path_browscap = Path(os.getcwd()).parent / "UA" / "browscap.csv"
@@ -17,7 +17,6 @@ mask = ((df['PropertyName'].str.len() > 30) &
 df = df.loc[mask]
 df = df[df.Device_Type != '0']
 df = df[df.Device_Type != '']
-# df = df[:180000]
 df = df.reindex()
 newDF = pandas.DataFrame() 
 df = newDF.append(df, ignore_index=True)
@@ -35,7 +34,7 @@ joblib.dump(vectorizer, 'vec_count.joblib')
 
 X_train, X_test, y_train, y_test = train_test_split(features_nd, data_labels, test_size=0.20, random_state=1234)
 
-log_model = LogisticRegression()
+log_model = LogisticRegression(multi_class="auto")
 log_model = log_model.fit(X=X_train, y=y_train)  # type: LogisticRegression
 
 joblib.dump(log_model, 'model.h5') 

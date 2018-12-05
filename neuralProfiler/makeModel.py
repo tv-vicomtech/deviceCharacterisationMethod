@@ -4,13 +4,11 @@ import keras.preprocessing.text as kpt
 from keras.preprocessing.text import Tokenizer
 from pathlib import Path
 import os
-import csv
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from matplotlib import pyplot
-from collections import Counter
 
 # extract data from a csv
 # notice the cool options to skip lines at the beginning
@@ -43,8 +41,6 @@ Y = [x.replace('Windows Desktop', 'Desktop') for x in Y]
 Y = [x.replace('general Desktop', 'Desktop') for x in Y]
 Y = [x.replace('general Mobile Phone', 'Mobile Phone') for x in Y]
 #print(set(Y))
-#c = Counter(Y)
-#print(c)
 
 # only work with the most popular words found in our dataset
 max_words = 3500 #4090
@@ -81,7 +77,6 @@ X = tokenizer.sequences_to_matrix(allWordIndices, mode='binary')
 label_encoder = LabelEncoder()
 integer_encoded = label_encoder.fit(Y)
 print(label_encoder.classes_)
-# print(integer_encoded)
 Y = label_encoder.transform(Y)
 Y = keras.utils.to_categorical(Y, 4)
 from keras.models import Sequential
@@ -102,8 +97,8 @@ model.summary()
 
 callbacks_list = [
                   keras.callbacks.ReduceLROnPlateau(monitor='val_loss', patience=2, factor=0.1),
-                  keras.callbacks.ModelCheckpoint(filepath='model_ste.h5', monitor='val_loss', save_best_only=True),
-                  keras.callbacks.TensorBoard(log_dir='tf_logs', histogram_freq=1)
+                  keras.callbacks.ModelCheckpoint(filepath='model.h5', monitor='val_loss', save_best_only=True),
+                  # keras.callbacks.TensorBoard(log_dir='tf_logs', histogram_freq=1)
                  ]
 
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -119,7 +114,6 @@ model_json = model.to_json()
 with open('model.json', 'w') as json_file:
     json_file.write(model_json)
 
-model.save_weights('model.h5')
 pyplot.plot(history.history['loss'])
 pyplot.plot(history.history['val_loss'])
 pyplot.title('model train vs validation loss')
