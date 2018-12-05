@@ -1,4 +1,4 @@
-# deviceCharacterisationMethods
+# Device Characterisation Methods
 
 This repository includes the code accompanying the paper *Methods for device characterisation in media services* submitted to the ACM International Conference on Interactive Experiences for Television and Online Video (TVX'19 - https://tvx.acm.org/2019/).
 
